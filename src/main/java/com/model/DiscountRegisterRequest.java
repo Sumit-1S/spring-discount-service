@@ -1,6 +1,6 @@
 package com.model;
 
-import com.example.enums.UserType;
+import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +11,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserPasswordResetRequest {
-	private String username;
-	private String password;
-	private String confirmPassword;
+public class DiscountRegisterRequest {
+	private Integer policyId;
+	private Double discountAmount;
+	private Boolean active;
 }

@@ -7,53 +7,26 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.DAO.UserDAO;
-import com.example.entity.User;
-import com.model.UserLoginRequest;
-import com.model.UserPasswordResetRequest;
+import com.DAO.DiscountDAO;
+import com.example.entity.Discount;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	private UserDAO userDAO;
+	private DiscountDAO dao;
 
+	
 	@Override
-	public String addUser(User user) throws Exception {
-		ArrayList<User> userLs = this.getAllUser();
-		for(User u: userLs) {
-			if(u.getUsername().equals(user.getUsername()))
-				return "OOOPs... User with similar Username Exists";
-		}
-		userDAO.save(user);
-		return "User Added";
+	public ArrayList<Discount> getDiscountByPolicyId(Integer policyId) {
+		return (ArrayList)dao.findByPolicyId(policyId);
 	}
 
-	@Override
-	public ArrayList<User> getAllUser() {
-		return (ArrayList<User>)userDAO.findAll();
-	}
 
 	@Override
-	public String updatePassword(UserPasswordResetRequest user) {
-		Optional<User> oldUser = userDAO.findById(user.getUsername());
-		if(oldUser.isPresent())
-		{
-			User u = oldUser.get();
-			userDAO.updatePassword(u.getUsername(),user.getPassword());
-			return "Update Successfull";
-		}
-		return "User not available/registered";
-	}
-
-	@Override
-	public Boolean verifyUser(UserLoginRequest userRequest) {
-		Optional<User> user = userDAO.findById(userRequest.getUsername());
-		if(user.isPresent() && user.get().getPassword().equals(userRequest.getPassword()))
-		{
-			return true;
-		}
-		return false;
+	public String addDiscount(Discount discount) {
+		dao.save(discount);
+		return "Discount Added...";
 	}
 	
 	
