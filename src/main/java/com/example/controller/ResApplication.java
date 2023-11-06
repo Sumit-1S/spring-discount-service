@@ -27,23 +27,30 @@ import com.model.DiscountRegisterRequest;
 
 
 @Controller
-@RequestMapping("/loginService")
+@RequestMapping("/discountService")
 public class ResApplication {
 	
 	@Autowired
 	private DiscountService service;
 	
 	
-	@PostMapping("adddiscount")
+	@PostMapping("/adddiscount")
 	@ResponseBody
 	public ResponseEntity<String> addDiscount(@RequestBody DiscountRegisterRequest discount) throws Exception{
 		return new ResponseEntity<>(service.addDiscount(new Discount(discount.getPolicyId(),discount.getDiscountAmount(),discount.getActive())),HttpStatus.OK);	
 	}
 	
-	@GetMapping("/getalldiscount/{policyId}")
+	@GetMapping("/getDiscount/{policyId}")
 	@ResponseBody
 	public ArrayList<Discount> getPolicyById(@PathVariable Integer policyId) throws Exception{
 		return service.getDiscountByPolicyId(policyId);
+	}
+	
+	@PutMapping("/deleteoffer/{discountId}")
+	@ResponseBody
+	@Transactional
+	public ResponseEntity<String> deleteDiscount(@PathVariable Integer discountId) throws Exception{
+		return service.deletePolicyById(discountId);	
 	}
 	
 
