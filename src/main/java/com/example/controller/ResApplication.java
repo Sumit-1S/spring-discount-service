@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import com.model.DiscountRegisterRequest;
 
 @Controller
 @RequestMapping("/discountService")
+@CrossOrigin("http://localhost:3002")
 public class ResApplication {
 	
 	@Autowired
@@ -37,7 +39,7 @@ public class ResApplication {
 	@PostMapping("/adddiscount")
 	@ResponseBody
 	public ResponseEntity<String> addDiscount(@RequestBody DiscountRegisterRequest discount) throws Exception{
-		return new ResponseEntity<>(service.addDiscount(new Discount(discount.getPolicyId(),discount.getDiscountAmount(),discount.getActive())),HttpStatus.OK);	
+		return new ResponseEntity<>(service.addDiscount(discount),HttpStatus.OK);	
 	}
 	
 	@GetMapping("/getDiscount/{policyId}")
@@ -53,5 +55,13 @@ public class ResApplication {
 		return service.deletePolicyById(discountId);	
 	}
 	
+	@GetMapping("/getDiscountByList/{policyId}")
+	@ResponseBody
+	public ArrayList<Discount> getPolicyByIdList(@PathVariable List<Integer> policyId) throws Exception{
+		if(policyId.size()!=0)
+		return service.getDiscountByPolicyIdList(policyId);
+		else
+			return service.getAllDiscount();
+	}
 
 }

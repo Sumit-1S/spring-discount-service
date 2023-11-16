@@ -1,5 +1,6 @@
 package com.DAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,5 +13,8 @@ import com.example.entity.Discount;
 
 @Repository
 public interface DiscountDAO extends CrudRepository<Discount, Integer> {
+	public List<Discount> findByActiveTrueAndPolicyId(Integer policyId);
 	public List<Discount> findByPolicyId(Integer policyId);
+	public List<Discount> findByActiveTrue();
+
 }

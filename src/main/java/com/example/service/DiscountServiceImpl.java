@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.DAO.DiscountDAO;
 import com.example.entity.Discount;
+import com.model.DiscountRegisterRequest;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -26,8 +27,13 @@ public class DiscountServiceImpl implements DiscountService {
 
 
 	@Override
-	public String addDiscount(Discount discount) {
-		dao.save(discount);
+	public String addDiscount(DiscountRegisterRequest discount) {
+		Discount dis = Discount.builder()
+				.policyId(discount.getPolicyId())
+				.discountAmount(discount.getDiscountAmount())
+				.active(discount.getActive())
+				.build();
+		dao.save(dis);
 		return "Discount Added...";
 	}
 
@@ -37,6 +43,27 @@ public class DiscountServiceImpl implements DiscountService {
 		Optional<Discount> d = dao.findById(discountId);
 		d.get().setActive(false);
 		return new ResponseEntity<>("Updated Discount",HttpStatus.OK);
+	}
+
+
+	@Override
+	public ArrayList<Discount> getDiscountByPolicyIdList(List<Integer> policyId) {
+		ArrayList<Discount> arr = new ArrayList();
+		for(Integer i:policyId) {
+			ArrayList<Discount> temp = (ArrayList)dao.findByActiveTrueAndPolicyId(i);
+			if(temp.size()>0)
+				arr.add(temp.get(0));
+			else {
+				arr.add(new Discount(0,i,0.0,true));
+			}
+		}
+		return arr;
+	}
+
+
+	@Override
+	public ArrayList<Discount> getAllDiscount() {
+		return (ArrayList)dao.findByActiveTrue();
 	}
 	
 	
